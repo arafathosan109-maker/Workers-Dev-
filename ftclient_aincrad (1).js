@@ -180,7 +180,6 @@
   function startProcessingMessages(){stopProcessingMessages();processMessageRunning=true;}
   function stopProcessingMessages(){processMessageRunning=false;clearTimeout(processMessageTimer);processMessageTimer=0;processMessageQueue=[];processMessageBusy=false;processMessages.innerHTML="";}
   function originalLog(icon,text){
-    showProcessingMessage(text);
     showNotice(text,"Aincrad process update",icon,950);
   }
   
@@ -284,10 +283,6 @@
       stopProcessingMessages();
       const reason=error.message||"Unknown error";
       showNotice("PROCESSING ERROR",reason+" • Please try again","!",3500);
-      const msg=document.createElement("div");
-      msg.className="process-msg show";
-      msg.textContent="ERROR: "+reason+" — PLEASE TRY AGAIN";
-      processMessages.appendChild(msg);
     }
   });
   document.getElementById("back").addEventListener("click",()=>{stopProcessingMessages();cancelAnimationFrame(timerId);page("accessPage");});
