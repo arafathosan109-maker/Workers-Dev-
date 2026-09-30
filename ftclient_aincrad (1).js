@@ -306,4 +306,63 @@
     setTimeout(()=>r.remove(),520);
   }
   addEventListener("pointerdown",e=>ripple(e.clientX,e.clientY),{passive:true});
+
+  // Added touch feedback effect.
+  let lastTouch = 0;
+  function bubbleTouch(x, y){
+    const now = performance.now();
+    if(now - lastTouch < 35) return;
+    lastTouch = now;
+
+    const count = 22;
+    for(let i = 0; i < count; i++){
+      const bubble = document.createElement("span");
+      bubble.style.position = "fixed";
+      bubble.style.left = x + "px";
+      bubble.style.top = y + "px";
+      bubble.style.width = (3 + Math.random() * 7) + "px";
+      bubble.style.height = bubble.style.width;
+      bubble.style.borderRadius = "50%";
+      bubble.style.pointerEvents = "none";
+      bubble.style.zIndex = "2147483648";
+      bubble.style.background = "radial-gradient(circle at 30% 25%,rgba(255,255,255,.95),rgba(80,215,235,.48) 42%,rgba(80,125,245,.18))";
+      bubble.style.border = "1px solid rgba(255,255,255,.65)";
+      bubble.style.boxShadow = "0 0 5px rgba(55,200,230,.25),inset 0 0 3px rgba(255,255,255,.8)";
+
+      const angle = Math.random() * Math.PI * 2;
+      const distance = 35 + Math.random() * 85;
+      const dx = Math.cos(angle) * distance;
+      const dy = Math.sin(angle) * distance;
+      const duration = 650 + Math.random() * 500;
+
+      bubble.animate([
+        {transform:"translate(-50%,-50%) scale(.2)",opacity:0},
+        {transform:"translate(-50%,-50%) scale(1)",opacity:.9,offset:.18},
+        {transform:`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) scale(.35)`,opacity:0}
+      ], {duration,easing:"cubic-bezier(.16,.72,.22,1)",fill:"forwards"});
+
+      document.body.appendChild(bubble);
+      setTimeout(() => bubble.remove(), duration + 50);
+    }
+
+    const center = document.createElement("span");
+    center.style.position = "fixed";
+    center.style.left = x + "px";
+    center.style.top = y + "px";
+    center.style.width = "12px";
+    center.style.height = "12px";
+    center.style.borderRadius = "50%";
+    center.style.pointerEvents = "none";
+    center.style.zIndex = "2147483648";
+    center.style.border = "1px solid rgba(70,205,230,.6)";
+    center.style.boxShadow = "0 0 10px rgba(65,205,230,.25)";
+    center.animate([
+      {transform:"translate(-50%,-50%) scale(.2)",opacity:.8},
+      {transform:"translate(-50%,-50%) scale(3)",opacity:0}
+    ], {duration:500,easing:"ease-out",fill:"forwards"});
+    document.body.appendChild(center);
+    setTimeout(() => center.remove(), 550);
+  }
+
+  addEventListener("pointerdown", e => bubbleTouch(e.clientX, e.clientY), {passive:true});
 })();
